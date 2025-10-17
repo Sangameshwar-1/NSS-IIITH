@@ -1,0 +1,58 @@
+/* 1️⃣ Import Playfair Display font */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&display=swap');
+
+/* 3️⃣ Custom global styles */
+body {
+  font-family: 'Playfair Display', serif;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+/* For Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background: transparent;
+}
+
+/* Hide thumb by default */
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.15);
+  border-radius: 8px;
+  opacity: 0;
+  transition: background 0.2s, opacity 0.3s;
+}
+
+/* Show thumb when scrolling */
+body.scrolling ::-webkit-scrollbar-thumb {
+  opacity: 1;
+}
+
+/* Hover effect */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.30);
+}
+
+/* Click effect (darker) */
+::-webkit-scrollbar-thumb:active {
+  background: rgba(0,0,0,0.45);
+}
+
+/* Track matches bg */
+::-webkit-scrollbar-track {
+  background: #FAEBE8;
+}
+
+/* For Firefox */
+html, body, * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.15) #FAEBE8;
+}
+
+/* Optional horizontal scroll containers */
+.scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.15) #FAEBE8;
+}
