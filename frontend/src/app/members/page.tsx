@@ -1,31 +1,31 @@
 import React from "react";
 import MembersSection from "@/components/team/MembersSection";
-// import { getMembersFromDB } from "@/graphql_Q&M/getMembers";
+import { getMembersFromDB } from "@/graphql_Q&M/getMembers";
 import Footer from "@/utils/Footer";
 import Navbar from "@/utils/Navbar";
 
 export default async function MembersPage() {
-//   let members = [];
-//   try {
-//     const rawMembers = await getMembersFromDB();
-//     members = rawMembers.map((doc: any) => ({
-//       id: doc._id?.toString() ?? "",
-//       email: doc.email ?? "",
-//       name: doc.name ?? "",
-//       photoUrl: doc.photoUrl ?? "",
-//       team: doc.team ?? "",
-//       rollNumber: doc.rollNumber ?? "",
-//       status: doc.status === "active" ? "active" : "inactive" as "active" | "inactive",
-//       from: doc.from ?? "",
-//       to: doc.to ?? "",
-//     }));
-//   } catch (error) {
-//     console.error("Error fetching members:", error);
-//     members = [];
-//   }
+  let members = [];
+  try {
+    const rawMembers = await getMembersFromDB();
+    members = rawMembers.map((doc: any) => ({
+      id: doc.id ?? "",
+      email: doc.email ?? "",
+      name: doc.name ?? "",
+      photoUrl: doc.photoUrl ?? "",
+      team: doc.team ?? "",
+      rollNumber: doc.rollNumber ?? "",
+      status: doc.status === "ACTIVE" ? "active" : "inactive" as "active" | "inactive",
+      from: doc.start ?? "",
+      to: doc.end ?? "",
+    }));
+  } catch (error) {
+    console.error("Error fetching members:", error);
+    members = [];
+  }
 
-  // Mock data with firstname.lastname IDs
-  const members = [
+  // Fallback mock data if backend fails
+  const mockMembers = [
     {
       id: "akshay.chanda",
       email: "chanda.kumar@students.iiit.ac.in",

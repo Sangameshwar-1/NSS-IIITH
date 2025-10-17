@@ -4,17 +4,17 @@ from enum import Enum
 
 @strawberry.enum
 class MemberTypeEnum(str, Enum):
-    ADMIN = "admin"
-    TECH = "tech"
-    DESIGN = "design"
-    CONTENT = "content"
-    LOGISTICS = "logistics"
-    VOLUNTEER = "volunteer"
+    ADMIN = "ADMIN"
+    TECH = "TECH"
+    DESIGN = "DESIGN"
+    CONTENT = "CONTENT"
+    LOGISTICS = "LOGISTICS"
+    VOLUNTEER = "VOLUNTEER"
 
 @strawberry.enum
 class MemberStatusEnum(str, Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
+    ACTIVE = "ACTIVE"
+    INACTIVE = "INACTIVE"
 
 
 class MemberModel(BaseModel):

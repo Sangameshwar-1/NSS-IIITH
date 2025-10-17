@@ -1,6 +1,6 @@
 from model_events import *
 from model_members import MemberInput
-from database import db
+from database import get_database
 import strawberry
 import datetime
 import pytz
@@ -15,6 +15,7 @@ def addEvent(event: EventInput, head: MemberInput | None = None) -> bool:
         head_data = head.model_dump()
         event_data["eventHead"] = head_data
     
+    db = get_database()
     db["events"].insert_one(event_data)
     return True
 
@@ -25,6 +26,7 @@ def changeEvent(event: EventInput, head:MemberInput | None = None) -> bool:
         head_data = head.model_dump()
         event_data["eventHead"] = head_data
     
+    db = get_database()
     result = db["events"].update_one(
         {"name": event.name},
         {"$set": event_data}
@@ -33,6 +35,7 @@ def changeEvent(event: EventInput, head:MemberInput | None = None) -> bool:
 
 @strawberry.field
 def viewEvents(name: str | None = None, startTime:str | None = None, endTime:str | None = None)  -> list[EventType]:
+    db = get_database()
     if name:
         events = db["events"].find({"name": name})
     elif startTime and endTime:

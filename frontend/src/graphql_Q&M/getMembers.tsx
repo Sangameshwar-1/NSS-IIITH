@@ -7,14 +7,24 @@ export async function getMembersFromDB() {
       query: `
         query {
           viewMembers {
+            id
             name
             email
             rollNumber
+            role
+            year
+            department
             team
             status
             start
             end
             photoUrl
+            phone
+            linkedin
+            github
+            bio
+            achievements
+            interests
           }
         }
       `

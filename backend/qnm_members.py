@@ -1,5 +1,5 @@
 from model_members import *
-from database import db
+from database import get_database
 import strawberry
 import datetime
 import pytz
@@ -10,13 +10,19 @@ time=datetime.datetime.now(ist)
 
 @strawberry.mutation
 def addMember(member: MemberInput) -> bool:
-    member_data = member.model_dump()
+    # Convert Strawberry input to Pydantic model, then to dict
+    pydantic_member = member.to_pydantic()
+    member_data = pydantic_member.model_dump()
+    db = get_database()
     db["members"].insert_one(member_data)
     return True
 
 @strawberry.mutation
 def changeMember(member: MemberInput) -> bool:
-    member_data = member.model_dump()
+    # Convert Strawberry input to Pydantic model, then to dict
+    pydantic_member = member.to_pydantic()
+    member_data = pydantic_member.model_dump()
+    db = get_database()
     # Update by id (username) or rollNumber
     filter_query = {"id": member.id} if hasattr(member, 'id') and member.id else {"rollNumber": member.rollNumber}
     db["members"].update_one(
@@ -32,7 +38,6 @@ def viewMembers(
     id: str = None,
     status: MemberStatusEnum = None
 ) -> list[Member]:
-    members = []
     query = {}
     
     if id:
@@ -43,15 +48,33 @@ def viewMembers(
         query["team"] = {"$in": team}
     if status:
         query["status"] = status
-        
-    members = list(db["members"].find(query))
+    
+    db = get_database()
+    member_dicts = list(db["members"].find(query))
+    
+    # Convert MongoDB documents to Member objects
+    members = []
+    for member_dict in member_dicts:
+        member_dict.pop('_id', None)  # Remove MongoDB's _id field
+        # Convert dict to MemberModel (Pydantic model)
+        member_model = MemberModel(**member_dict)
+        # Strawberry will automatically convert the Pydantic model
+        members.append(Member.from_pydantic(member_model))
+    
     return members
 
 @strawberry.field
 def getMemberByUsername(username: str) -> Member | None:
     """Get a single member by their username (id field)"""
-    member = db["members"].find_one({"id": username})
-    return member if member else None
+    db = get_database()
+    member_dict = db["members"].find_one({"id": username})
+    if member_dict:
+        member_dict.pop('_id', None)  # Remove MongoDB's _id field
+        # Convert dict to MemberModel (Pydantic model)
+        member_model = MemberModel(**member_dict)
+        # Strawberry will automatically convert the Pydantic model
+        return Member.from_pydantic(member_model)
+    return None
 
 queries+=[viewMembers, getMemberByUsername]
 mutations+=[addMember, changeMember]
