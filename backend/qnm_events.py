@@ -33,6 +33,13 @@ def changeEvent(event: EventInput, head:MemberInput | None = None) -> bool:
     )
     return result.modified_count > 0
 
+@strawberry.mutation
+def deleteEvent(name: str) -> bool:
+    """Delete an event by name"""
+    db = get_database()
+    result = db["events"].delete_one({"name": name})
+    return result.deleted_count > 0
+
 @strawberry.field
 def viewEvents(name: str | None = None, startTime:str | None = None, endTime:str | None = None)  -> list[EventType]:
     db = get_database()
@@ -48,4 +55,4 @@ def viewEvents(name: str | None = None, startTime:str | None = None, endTime:str
     return [EventType(**event) for event in events]
 
 queries = [viewEvents]
-mutations = [addEvent, changeEvent]
+mutations = [addEvent, changeEvent, deleteEvent]

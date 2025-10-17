@@ -6,27 +6,6 @@ import { useRouter, usePathname } from "next/navigation";
 const ACTIVE_BG = "#E90000"; // Airtel Red
 const NSS_BLUE = "#1e3a8a"; // NSS Blue theme
 
-// Logout function
-const handleLogout = () => {
-    console.log("=== LOGOUT INITIATED ===");
-    
-    // Clear the uid cookie with multiple variations to ensure it's removed
-    // Clear for current domain
-    document.cookie = "uid=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    // Clear for localhost specifically
-    document.cookie = "uid=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    // Clear without domain
-    document.cookie = "uid=; path=/; max-age=0;";
-    
-    console.log("Cookies after logout:", document.cookie);
-    console.log("Redirecting to home page...");
-    
-    // Small delay to ensure cookie is cleared, then redirect
-    setTimeout(() => {
-        window.location.href = "/";
-    }, 100);
-};
-
 const navItems = [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
@@ -41,16 +20,10 @@ const Navbar = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(1200);
     const [scrolled, setScrolled] = useState(false);
-    const [showProfileDropdown, setShowProfileDropdown] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [showInitialAnimation, setShowInitialAnimation] = useState(false);
     const hasAnimatedRef = useRef(false);
     const [uid, setUid] = useState<string | null>(null);
-
-    // Debug: Log when showProfileDropdown changes
-    useEffect(() => {
-        console.log("showProfileDropdown changed to:", showProfileDropdown);
-    }, [showProfileDropdown]);
 
     const particles = Array.from({ length: 8 }, (_, i) => ({
         id: i,
@@ -148,13 +121,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const match = document.cookie.match(/(?:^|; )uid=([^;]*)/);
-        const foundUid = match ? decodeURIComponent(match[1]) : null;
-        console.log("=== COOKIE DEBUG ===");
-        console.log("All cookies:", document.cookie);
-        console.log("Regex match:", match);
-        console.log("Cookie UID found:", foundUid);
-        console.log("===================");
-        setUid(foundUid);
+        setUid(match ? decodeURIComponent(match[1]) : null);
     }, []);
 
     // Show loading state for first render to prevent hydration mismatch
@@ -321,125 +288,34 @@ const Navbar = () => {
                             Login
                         </button>
                     ) : (
-                        <div 
-                            style={{ position: "relative", marginLeft: "0.5rem" }}
-                            onMouseEnter={() => {
-                                console.log("Mouse entered profile container");
-                                setShowProfileDropdown(true);
+                        <button
+                            onClick={() => window.location.replace(`http://localhost:3000/me/profile/${uid}`)}
+                            style={{
+                                padding: "0.3rem",
+                                borderRadius: "50%",
+                                background: "#fff",
+                                border: `2px solid ${NSS_BLUE}`,
+                                cursor: "pointer",
+                                width: 40,
+                                height: 40,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginLeft: "0.5rem"
                             }}
-                            onMouseLeave={() => {
-                                console.log("Mouse left profile container");
-                                setShowProfileDropdown(false);
-                            }}
+                            title="Go to profile"
                         >
-                            <button
+                            <img
+                                src="/favicon.ico"
+                                alt="Profile"
                                 style={{
-                                    padding: "0.3rem",
+                                    width: "28px",
+                                    height: "28px",
                                     borderRadius: "50%",
-                                    background: "#fff",
-                                    border: `2px solid ${NSS_BLUE}`,
-                                    cursor: "pointer",
-                                    width: 40,
-                                    height: 40,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center"
+                                    objectFit: "cover"
                                 }}
-                                title="Profile menu"
-                            >
-                                <img
-                                    src="/favicon.ico"
-                                    alt="Profile"
-                                    style={{
-                                        width: "28px",
-                                        height: "28px",
-                                        borderRadius: "50%",
-                                        objectFit: "cover"
-                                    }}
-                                />
-                            </button>
-                            
-                            {/* Profile Dropdown Menu */}
-                            {showProfileDropdown && (
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        top: "50px",
-                                        right: 0,
-                                        background: "#fff",
-                                        borderRadius: "12px",
-                                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                                        minWidth: "200px",
-                                        overflow: "hidden",
-                                        zIndex: 3000,
-                                        animation: "fadeIn 0.2s ease-in-out"
-                                    }}
-                                    onMouseEnter={() => console.log("Mouse on dropdown")}
-                                >
-                                    <div
-                                        style={{
-                                            padding: "1rem",
-                                            borderBottom: "1px solid #e5e7eb",
-                                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                                            color: "#fff"
-                                        }}
-                                    >
-                                        <p style={{ margin: 0, fontWeight: 600, fontSize: "0.95rem" }}>
-                                            {uid}
-                                        </p>
-                                        <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", opacity: 0.9 }}>
-                                            {uid}@students.iiit.ac.in
-                                        </p>
-                                    </div>
-                                    
-                                    <button
-                                        onClick={() => window.location.replace(`http://localhost:3000/me/profile/${uid}`)}
-                                        style={{
-                                            width: "100%",
-                                            padding: "0.75rem 1rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            textAlign: "left",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem",
-                                            color: "#374151",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            transition: "background 0.2s"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "#f3f4f6"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                    >
-                                        <span>👤</span> My Profile
-                                    </button>
-                                    
-                                    <button
-                                        onClick={handleLogout}
-                                        style={{
-                                            width: "100%",
-                                            padding: "0.75rem 1rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            textAlign: "left",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem",
-                                            color: "#dc2626",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            fontWeight: 600,
-                                            transition: "background 0.2s",
-                                            borderTop: "1px solid #e5e7eb"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "#fee2e2"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                    >
-                                        <span>🚪</span> Logout
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                            />
+                        </button>
                     )}
                 </div>
             </nav>
@@ -861,218 +737,35 @@ const Navbar = () => {
                             Login
                         </button>
                     ) : (
-                        <div 
-                            style={{ position: "relative", marginLeft: "0.5rem" }}
-                            onMouseEnter={() => {
-                                console.log("Mouse entered profile container");
-                                setShowProfileDropdown(true);
+                        <button
+                            onClick={() => window.location.replace(`http://localhost:3000/me/profile/${uid}`)}
+                            style={{
+                                padding: "0.3rem",
+                                borderRadius: "50%",
+                                background: "#fff",
+                                border: `2px solid ${NSS_BLUE}`,
+                                cursor: "pointer",
+                                width: 40,
+                                height: 40,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                marginLeft: "0.5rem"
                             }}
-                            onMouseLeave={() => {
-                                console.log("Mouse left profile container");
-                                setShowProfileDropdown(false);
-                            }}
+                            title="Go to profile"
                         >
-                            <button
+                            <img
+                                src="/favicon.ico"
+                                alt="Profile"
                                 style={{
-                                    padding: "0.3rem",
+                                    width: "28px",
+                                    height: "28px",
                                     borderRadius: "50%",
-                                    background: "#fff",
-                                    border: `2px solid ${NSS_BLUE}`,
-                                    cursor: "pointer",
-                                    width: 40,
-                                    height: 40,
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center"
+                                    objectFit: "cover"
                                 }}
-                                title="Profile menu"
-                            >
-                                <img
-                                    src="/favicon.ico"
-                                    alt="Profile"
-                                    style={{
-                                        width: "28px",
-                                        height: "28px",
-                                        borderRadius: "50%",
-                                        objectFit: "cover"
-                                    }}
-                                />
-                            </button>
-                            
-                            {/* Profile Dropdown Menu */}
-                            {showProfileDropdown && (
-                                <div
-                                    style={{
-                                        position: "absolute",
-                                        top: "50px",
-                                        right: 0,
-                                        background: "#fff",
-                                        borderRadius: "12px",
-                                        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                                        minWidth: "200px",
-                                        overflow: "hidden",
-                                        zIndex: 3000,
-                                        animation: "fadeIn 0.2s ease-in-out"
-                                    }}
-                                    onMouseEnter={() => console.log("Mouse on dropdown")}
-                                >
-                                    <div
-                                        style={{
-                                            padding: "1rem",
-                                            borderBottom: "1px solid #e5e7eb",
-                                            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                                            color: "#fff"
-                                        }}
-                                    >
-                                        <p style={{ margin: 0, fontWeight: 600, fontSize: "0.95rem" }}>
-                                            {uid}
-                                        </p>
-                                        <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.75rem", opacity: 0.9 }}>
-                                            {uid}@students.iiit.ac.in
-                                        </p>
-                                    </div>
-                                    
-                                    <button
-                                        onClick={() => window.location.replace(`http://localhost:3000/me/profile/${uid}`)}
-                                        style={{
-                                            width: "100%",
-                                            padding: "0.75rem 1rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            textAlign: "left",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem",
-                                            color: "#374151",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            transition: "background 0.2s"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "#f3f4f6"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                    >
-                                        <span>👤</span> My Profile
-                                    </button>
-                                    
-                                    <button
-                                        onClick={() => window.location.replace(`http://localhost:3000/admin`)}
-                                        style={{
-                                            width: "100%",
-                                            padding: "0.75rem 1rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            textAlign: "left",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem",
-                                            color: "#667eea",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            fontWeight: 600,
-                                            transition: "background 0.2s",
-                                            borderTop: "1px solid #e5e7eb"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "#f0f4ff"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                    >
-                                        <span>🛠️</span> Admin Dashboard
-                                    </button>
-                                    
-                                    <button
-                                        onClick={handleLogout}
-                                        style={{
-                                            width: "100%",
-                                            padding: "0.75rem 1rem",
-                                            background: "transparent",
-                                            border: "none",
-                                            textAlign: "left",
-                                            cursor: "pointer",
-                                            fontSize: "0.9rem",
-                                            color: "#dc2626",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            gap: "0.5rem",
-                                            fontWeight: 600,
-                                            transition: "background 0.2s",
-                                            borderTop: "1px solid #e5e7eb"
-                                        }}
-                                        onMouseEnter={(e) => e.currentTarget.style.background = "#fee2e2"}
-                                        onMouseLeave={(e) => e.currentTarget.style.background = "transparent"}
-                                    >
-                                        <span>🚪</span> Logout
-                                    </button>
-                                </div>
-                            )}
-                        </div>
+                            />
+                        </button>
                     )}
-                </div>
-                
-                {/* DEBUG: Show uid state */}
-                <div style={{ 
-                    position: "fixed", 
-                    top: "100px", 
-                    right: "10px", 
-                    background: "yellow", 
-                    padding: "10px", 
-                    zIndex: 9999,
-                    fontSize: "12px",
-                    borderRadius: "5px",
-                    border: "2px solid red"
-                }}>
-                    <div><strong>DEBUG INFO:</strong></div>
-                    <div>UID State: {uid || "NULL"}</div>
-                    <div>Type: {typeof uid}</div>
-                    <div>Truthy: {uid ? "YES" : "NO"}</div>
-                    <div style={{ marginTop: "10px", borderTop: "1px solid black", paddingTop: "10px" }}>
-                        {uid ? (
-                            <>
-                                <button
-                                    onClick={() => window.location.replace(`http://localhost:3000/me/profile/${uid}`)}
-                                    style={{
-                                        padding: "5px 10px",
-                                        marginRight: "5px",
-                                        background: NSS_BLUE,
-                                        color: "white",
-                                        border: "none",
-                                        borderRadius: "5px",
-                                        cursor: "pointer",
-                                        fontSize: "11px"
-                                    }}
-                                >
-                                    Profile
-                                </button>
-                                <button
-                                    onClick={handleLogout}
-                                    style={{
-                                        padding: "5px 10px",
-                                        background: ACTIVE_BG,
-                                        color: "white",
-                                        border: "none",
-                                        borderRadius: "5px",
-                                        cursor: "pointer",
-                                        fontSize: "11px"
-                                    }}
-                                >
-                                    Logout
-                                </button>
-                            </>
-                        ) : (
-                            <button
-                                onClick={() => window.location.replace("http://localhost:8000/login")}
-                                style={{
-                                    padding: "5px 10px",
-                                    background: NSS_BLUE,
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "5px",
-                                    cursor: "pointer",
-                                    fontSize: "11px"
-                                }}
-                            >
-                                Test Login
-                            </button>
-                        )}
-                    </div>
                 </div>
 
                 {/* Hamburger Menu Button - always show on mobile */}

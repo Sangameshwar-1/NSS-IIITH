@@ -52,6 +52,15 @@ async def login_redirect(request: Request, path: str = None):
         return RedirectResponse(url=cas_login_url)
     
     user, attributes, pgtiou = cas_client_nss.verify_ticket(ticket)
+    
+    # Debug: Log what CAS returns
+    print("=" * 50)
+    print("CAS LOGIN DATA:")
+    print(f"User: {user}")
+    print(f"Attributes: {attributes}")
+    print(f"PGTIOU: {pgtiou}")
+    print("=" * 50)
+    
     frontend_url = "http://localhost:3000/"
 
     response = RedirectResponse(url=frontend_url)

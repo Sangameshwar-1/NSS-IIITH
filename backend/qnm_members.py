@@ -31,6 +31,13 @@ def changeMember(member: MemberInput) -> bool:
     )
     return True
 
+@strawberry.mutation
+def deleteMember(id: str) -> bool:
+    """Delete a member by their username (id field)"""
+    db = get_database()
+    result = db["members"].delete_one({"id": id})
+    return result.deleted_count > 0
+
 @strawberry.field
 def viewMembers(
     name: str = None, 
@@ -77,4 +84,4 @@ def getMemberByUsername(username: str) -> Member | None:
     return None
 
 queries+=[viewMembers, getMemberByUsername]
-mutations+=[addMember, changeMember]
+mutations+=[addMember, changeMember, deleteMember]
