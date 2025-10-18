@@ -2,7 +2,9 @@
 Pictures:
 ![Uploading image.png…]()
 ![Uploading image.png…]()
-
+**Simplied testing steps**
+1. use setup.sh for setup the mongodb and making test database
+2. use start.sh to run the web locally with frontend+backend+database
 
 
 This project is a comprehensive web application designed for NSS IIITH, utilizing a Microservices architecture with a frontend (Next.js) and backend (FastAPI) setup. The application is deployed using Docker Compose and Nginx for load balancing and reverse proxy.
