@@ -1,4 +1,9 @@
 # Website
+Pictures:
+![Uploading image.png…]()
+![Uploading image.png…]()
+
+
 
 This project is a comprehensive web application designed for NSS IIITH, utilizing a Microservices architecture with a frontend (Next.js) and backend (FastAPI) setup. The application is deployed using Docker Compose and Nginx for load balancing and reverse proxy.
 
