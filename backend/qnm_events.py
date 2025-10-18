@@ -52,6 +52,9 @@ def viewEvents(name: str | None = None, startTime:str | None = None, endTime:str
     events = list(events)
     if not events:
         return []
+    # Remove MongoDB's _id field before creating EventType
+    for event in events:
+        event.pop('_id', None)
     return [EventType(**event) for event in events]
 
 queries = [viewEvents]

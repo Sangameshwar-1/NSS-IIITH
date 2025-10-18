@@ -74,6 +74,33 @@ async def login_redirect(request: Request, path: str = None):
     )
     return response
 
+@app.get("/logout")
+@app.get("/logout/")
+async def logout_redirect(request: Request):
+    """
+    Logout endpoint that clears the uid cookie and redirects to CAS logout
+    """
+    # Get the CAS logout URL
+    cas_logout_url = f"{CAS_SERVER_URL}logout"
+    
+    # Redirect to frontend home page after CAS logout
+    frontend_url = "http://localhost:3000/"
+    cas_logout_with_service = f"{cas_logout_url}?service={quote_plus(frontend_url)}"
+    
+    # Create response that redirects to CAS logout
+    response = RedirectResponse(url=cas_logout_with_service)
+    
+    # Clear the uid cookie
+    response.delete_cookie(
+        key="uid",
+        path="/",
+        domain=None
+    )
+    
+    print(f"[LOGOUT] Redirecting to CAS logout: {cas_logout_with_service}")
+    
+    return response
+
 # Prometheus metrics
 REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['method', 'endpoint'])
 REQUEST_DURATION = Histogram('http_request_duration_seconds', 'HTTP request duration')

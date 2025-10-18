@@ -3,5 +3,5 @@ export function login(path) {
     window.location.replace(`http://localhost:8000/login`);
 }
 export function logout() {
-    window.location.replace("http://localhost:8000/logout");
+    window.location.replace("https://localhost:3000/logout");
 }

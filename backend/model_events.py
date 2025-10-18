@@ -1,8 +1,10 @@
 import strawberry
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from model_members import MemberModel
 
 class EventModel(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    
     name: str
     startTime: str
     endTime: str

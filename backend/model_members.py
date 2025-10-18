@@ -1,5 +1,5 @@
 import strawberry
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from enum import Enum
 
 @strawberry.enum
@@ -18,6 +18,8 @@ class MemberStatusEnum(str, Enum):
 
 
 class MemberModel(BaseModel):
+    model_config = ConfigDict(extra='ignore')
+    
     id: str  # username in firstname.lastname format
     name: str
     email: str

@@ -37,10 +37,23 @@ export default function MemberCard({ member }: { member: Member }) {
   };
 
   return (
-    <div style={{ perspective: 1200, width: "100%", maxWidth: 220, minWidth: 180, height: "auto", aspectRatio: "220/260", margin: "10px auto 32px auto", display: "block", position: "relative" }} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+    <div
+      style={{ perspective: 1200, width: "100%", maxWidth: 220, minWidth: 180, height: "auto", aspectRatio: "220/260", margin: "10px auto 32px auto", display: "block", position: "relative" }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={handleFrontClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          handleFrontClick();
+        }
+      }}
+    >
       <div style={{ position: "relative", width: "100%", height: "100%", transition: "transform 1.2s cubic-bezier(.4,2,.3,1)", transformStyle: "preserve-3d", borderRadius: 24, boxShadow: hover ? "0 8px 24px rgba(0,0,0,0.18)" : "0 2px 12px rgba(0,0,0,0.07)", transform: hover ? "rotateY(180deg) translateX(0)" : "none", cursor: "pointer", transformOrigin: "center center", left: 0 }}>
-        {/* Front Side - Clickable to profile */}
-        <div onClick={handleFrontClick} style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backfaceVisibility: "hidden", background: "#fff", borderRadius: 24, display: "flex", flexDirection: "column", alignItems: "center", padding: 20, textAlign: "center", justifyContent: "center" }}>
+  {/* Front Side - Clickable to profile */}
+  <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backfaceVisibility: "hidden", background: "#fff", borderRadius: 24, display: "flex", flexDirection: "column", alignItems: "center", padding: 20, textAlign: "center", justifyContent: "center" }}>
           <div style={{ width: "clamp(120px, 70%, 160px)", height: "clamp(120px, 70%, 160px)", borderRadius: "50%", overflow: "hidden", marginBottom: 12, border: "3px solid #f3f3f3", background: "#eee", alignSelf: "center" }}>
             <img src={getImageSrc()} alt={member.name} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={handleImageError} />
           </div>

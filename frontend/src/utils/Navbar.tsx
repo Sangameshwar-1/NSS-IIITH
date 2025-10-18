@@ -10,21 +10,15 @@ const NSS_BLUE = "#1e3a8a"; // NSS Blue theme
 const handleLogout = () => {
     console.log("=== LOGOUT INITIATED ===");
     
-    // Clear the uid cookie with multiple variations to ensure it's removed
-    // Clear for current domain
+    // Clear the uid cookie locally first
     document.cookie = "uid=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    // Clear for localhost specifically
     document.cookie = "uid=; path=/; domain=localhost; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-    // Clear without domain
     document.cookie = "uid=; path=/; max-age=0;";
     
-    console.log("Cookies after logout:", document.cookie);
-    console.log("Redirecting to home page...");
+    console.log("Cookies cleared, redirecting to CAS logout...");
     
-    // Small delay to ensure cookie is cleared, then redirect
-    setTimeout(() => {
-        window.location.href = "/";
-    }, 100);
+    // Redirect directly to CAS logout
+    window.location.href = "https://login.iiit.ac.in/cas/logout";
 };
 
 const navItems = [

@@ -896,6 +896,52 @@ function MemberForm({ member, onChange, onSave, onCancel }: any) {
               </div>
             </div>
 
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <div>
+                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+                  Start Date 📅
+                </label>
+                <input
+                  type="text"
+                  value={member.start || ""}
+                  onChange={(e) => onChange({ ...member, start: e.target.value })}
+                  placeholder="2024 (year they joined)"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "2px solid #e5e7eb",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                  }}
+                />
+                <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                  Year they started working with NSS
+                </small>
+              </div>
+
+              <div>
+                <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+                  End Date 📅
+                </label>
+                <input
+                  type="text"
+                  value={member.end || ""}
+                  onChange={(e) => onChange({ ...member, end: e.target.value })}
+                  placeholder="2025 or _ for current"
+                  style={{
+                    width: "100%",
+                    padding: "0.75rem",
+                    border: "2px solid #e5e7eb",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                  }}
+                />
+                <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                  Use "_" or "present" for current members
+                </small>
+              </div>
+            </div>
+
             <div>
               <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>Phone</label>
               <input
@@ -977,6 +1023,58 @@ function MemberForm({ member, onChange, onSave, onCancel }: any) {
                   resize: "vertical",
                 }}
               />
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+                Achievements 🏆
+              </label>
+              <textarea
+                value={member.achievements?.join('\n') || ""}
+                onChange={(e) => onChange({ 
+                  ...member, 
+                  achievements: e.target.value.split('\n').filter(line => line.trim() !== '')
+                })}
+                rows={4}
+                placeholder="Enter achievements, one per line&#10;Example:&#10;Won Hackathon 2024&#10;Published research paper&#10;Led 5+ successful events"
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  border: "2px solid #e5e7eb",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  resize: "vertical",
+                }}
+              />
+              <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                One achievement per line
+              </small>
+            </div>
+
+            <div>
+              <label style={{ display: "block", marginBottom: "0.5rem", fontWeight: 600 }}>
+                Interests 💡
+              </label>
+              <textarea
+                value={member.interests?.join('\n') || ""}
+                onChange={(e) => onChange({ 
+                  ...member, 
+                  interests: e.target.value.split('\n').filter(line => line.trim() !== '')
+                })}
+                rows={4}
+                placeholder="Enter interests, one per line&#10;Example:&#10;Web Development&#10;AI/ML&#10;Community Service&#10;Photography"
+                style={{
+                  width: "100%",
+                  padding: "0.75rem",
+                  border: "2px solid #e5e7eb",
+                  borderRadius: "8px",
+                  fontSize: "1rem",
+                  resize: "vertical",
+                }}
+              />
+              <small style={{ color: "#6b7280", fontSize: "0.85rem" }}>
+                One interest per line
+              </small>
             </div>
           </div>
 

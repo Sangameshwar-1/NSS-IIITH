@@ -1,0 +1,30 @@
+
+> frontend@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.3.4 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.255.255.254:3000
+
+ ✓ Starting...
+ ✓ Ready in 21.4s
+ ○ Compiling /members ...
+ ✓ Compiled /members in 11.1s
+ GET /members 200 in 13173ms
+ ○ Compiling /_not-found/page ...
+ ✓ Compiled /_not-found/page in 4.4s
+ GET /.well-known/appspecific/com.chrome.devtools.json 404 in 5258ms
+ ○ Compiling /member/profile/[username] ...
+ ✓ Compiled /member/profile/[username] in 4.5s
+ GET /member/profile/rahul.verma 200 in 10840ms
+ GET /member/profile/rahul.verma 200 in 17379ms
+ GET /member/profile/rithik.palla 200 in 4658ms
+ GET /member/profile/rithik.palla 200 in 6973ms
+ GET /member/profile/rithik.palla 200 in 4307ms
+ GET /member/profile/aditi.sharma 200 in 1850ms
+ GET /member/profile/priya.singh 200 in 1020ms
+ GET /member/profile/akshay.chanda 200 in 2767ms
+ GET /member/profile/sangameshwar.sale 200 in 2216ms
+ ○ Compiling / ...
+ ✓ Compiled / in 37.3s
+ GET / 200 in 31029ms

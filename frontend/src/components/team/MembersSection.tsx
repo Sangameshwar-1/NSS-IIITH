@@ -42,10 +42,38 @@ export default function MembersSection({ members }: { members: Member[] }) {
     member.rollNumber.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Group present by team, past by year
-  const presentMembers = filteredMembers.filter(m => m.status === "active");
-  const pastMembers = filteredMembers.filter(m => m.status === "inactive");
+  // Determine if member is current or past based on end date
+  const currentYear = new Date().getFullYear();
+  
+  // Function to check if member is currently active
+  const isCurrentMember = (member: Member) => {
+    // If no end date or end date is "_" or in the future, they're current
+    if (!member.to || member.to === "_" || member.to.toLowerCase() === "present") {
+      return true;
+    }
+    const endYear = parseInt(member.to);
+    return !isNaN(endYear) && endYear >= currentYear;
+  };
 
+  // Separate current and past members
+  const presentMembers = filteredMembers.filter(m => isCurrentMember(m));
+  const pastMembers = filteredMembers.filter(m => !isCurrentMember(m));
+
+  // Sort present members by start date (newest first)
+  presentMembers.sort((a, b) => {
+    const yearA = parseInt(a.from) || 0;
+    const yearB = parseInt(b.from) || 0;
+    return yearB - yearA; // Descending order (newest first)
+  });
+
+  // Sort past members by end date (most recent first)
+  pastMembers.sort((a, b) => {
+    const yearA = parseInt(a.to) || 0;
+    const yearB = parseInt(b.to) || 0;
+    return yearB - yearA; // Descending order (newest first)
+  });
+
+  // Group present by team, past by end year
   const presentGroups = groupBy(presentMembers, m => m.team);
   const pastGroups = groupBy(pastMembers, m => m.to);
 
